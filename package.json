@@ -1,0 +1,24 @@
+{
+  "name": "suggestion-bot",
+  "version": "1.0.0",
+  "description": "Suggestion Bot",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "ts-node src/index.ts"
+  },
+  "author": "Prince Carlo Juguilon",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^15.12.2",
+    "@types/ws": "^7.4.4",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "firebase": "^8.6.7",
+    "fs": "^0.0.1-security",
+    "nodemon": "^2.0.7"
+  }
+}
