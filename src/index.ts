@@ -1,19 +1,19 @@
 import Discord from "discord.js";
 import path from "path";
 import FS from "fs";
-import { prefix, channelID } from "../config.json";
+import { prefix, channelIDs } from "../config.json";
 import { BASE_DIR } from "../constants";
 const client = new Discord.Client();
 const dotenv = require("dotenv");
 dotenv.config();
 const token = process.env.BOT_TOKEN;
+const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
 
 const getCommands = (): string[] => {
   const cmds: string[] = [];
   const dir = path.join(BASE_DIR, "./src", "./commands");
   FS.readdir(dir, (err, files) => {
     if (!err) {
-      const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
       files.forEach((file) => cmds.push(file.replace(extension, "")));
     }
   });
@@ -28,13 +28,12 @@ client.once("ready", () => {
 });
 
 client.on("message", (msg) => {
-  if (msg.channel.id === channelID && msg.content.startsWith(prefix)) {
+  if (channelIDs.includes(msg.channel.id) && msg.content.startsWith(prefix)) {
     let args = msg.content.split(" ");
     const cmd = args[0].substring(1, args[0].length);
 
     if (commands.includes(cmd)) {
       args.splice(0, 1);
-      const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
       const useCommand = require(path.join(
         BASE_DIR,
         "src",

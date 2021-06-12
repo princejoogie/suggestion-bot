@@ -7,20 +7,24 @@ const addSuggestion = async (suggestion: Suggestion) => {
 };
 
 module.exports = (msg: Discord.Message, args: string[]) => {
-  const suggestion = args.join(" ");
-  const user: User = {
-    id: msg.author.id,
-    photoURL: msg.author.avatarURL() ?? "",
-    name: msg.author.username,
-  };
-  const data: Suggestion = {
-    suggestion,
-    user,
-    timestamp: timestamp(),
-    votes: [],
-  };
+  const suggestion = args.join(" ").trim();
+  if (!suggestion) {
+    msg.reply("Invalid argument.");
+  } else {
+    const user: User = {
+      id: msg.author.id,
+      photoURL: msg.author.avatarURL() ?? "",
+      name: msg.author.username,
+    };
+    const data: Suggestion = {
+      suggestion,
+      user,
+      timestamp: timestamp(),
+      votes: [],
+    };
 
-  addSuggestion(data);
+    addSuggestion(data);
 
-  msg.reply("Suggestion Added!");
+    msg.reply("Suggestion Added!");
+  }
 };

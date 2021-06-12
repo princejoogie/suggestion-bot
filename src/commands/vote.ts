@@ -38,7 +38,7 @@ const vote = async (msg: Discord.Message, num: number) => {
         });
 
         let reply = "```\n";
-        reply += `Voted on ${suggestions[num - 1].suggestion} \n`;
+        reply += `Voted added to (${suggestions[num - 1].suggestion})\n`;
         reply += "```";
 
         msg.channel.send(reply);
