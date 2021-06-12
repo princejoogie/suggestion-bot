@@ -2,27 +2,26 @@
   "name": "suggestion-bot",
   "version": "1.0.0",
   "description": "Suggestion Bot",
-  "main": "src/index.ts",
+  "main": "dist/src/index.ts",
   "scripts": {
-    "watch": "nodemon --exec ts-node src/index.ts",
-    "start": "ts-node src/index.ts",
-    "dev": "node dist/src/index.js",
+    "watch": "cross-env NODE_ENV=DEVELOPMENT nodemon --exec ts-node src/index.ts",
+    "dev": "cross-env NODE_ENV=DEVELOPMENT ts-node src/index.ts",
+    "start": "cross-env NODE_ENV=PRODUCTION node dist/src/index.js",
     "build": "rimraf ./dist && tsc"
   },
   "author": "Prince Carlo Juguilon",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@types/node": "^15.12.2",
     "@types/ws": "^7.4.4",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
-  },
-  "dependencies": {
+    "cross-env": "^7.0.3",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "firebase": "^8.6.7",
     "fs": "^0.0.1-security",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
   }
 }

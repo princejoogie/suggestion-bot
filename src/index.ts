@@ -10,10 +10,11 @@ const token = process.env.BOT_TOKEN;
 
 const getCommands = (): string[] => {
   const cmds: string[] = [];
-  const dir = path.join(BASE_DIR, "src", "commands");
+  const dir = path.join(BASE_DIR, "./src", "./commands");
   FS.readdir(dir, (err, files) => {
     if (!err) {
-      files.forEach((file) => cmds.push(file.replace(".ts", "")));
+      const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
+      files.forEach((file) => cmds.push(file.replace(extension, "")));
     }
   });
   return cmds;
@@ -22,6 +23,7 @@ const getCommands = (): string[] => {
 const commands: string[] = getCommands();
 
 client.once("ready", () => {
+  console.log(`Running in ${process.env.NODE_ENV}`);
   console.log("Suggestion Bot running, DO NOT CLOSE!");
 });
 
@@ -32,11 +34,12 @@ client.on("message", (msg) => {
 
     if (commands.includes(cmd)) {
       args.splice(0, 1);
+      const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
       const useCommand = require(path.join(
         BASE_DIR,
         "src",
         "commands",
-        `${cmd}.ts`
+        `${cmd}${extension}`
       ));
       useCommand(msg, args);
     }
