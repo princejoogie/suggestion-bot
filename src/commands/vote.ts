@@ -23,7 +23,7 @@ const vote = async (msg: Discord.Message, num: number) => {
     );
 
     if (!suggestions.length) {
-      msg.reply("There are to suggestions to vote to.");
+      msg.reply("There are no suggestions to vote to.");
     } else if (num > suggestions.length) {
       msg.reply("Can't vote on that.");
     } else if (alreadyVoted(suggestions[num - 1], msg.author.id)) {
