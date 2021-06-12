@@ -4,8 +4,9 @@
   "description": "Suggestion Bot",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "ts-node src/index.ts"
+    "watch": "nodemon --exec ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/src/index.js"
   },
   "author": "Prince Carlo Juguilon",
   "license": "ISC",
