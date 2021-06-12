@@ -9,6 +9,9 @@ const fs_1 = __importDefault(require("fs"));
 const config_json_1 = require("../config.json");
 const constants_1 = require("../constants");
 const client = new discord_js_1.default.Client();
+const dotenv = require("dotenv");
+dotenv.config();
+const token = process.env.BOT_TOKEN;
 const getCommands = () => {
     const cmds = [];
     const dir = path_1.default.join(constants_1.BASE_DIR, "src", "commands");
@@ -34,5 +37,5 @@ client.on("message", (msg) => {
         }
     }
 });
-client.login(config_json_1.token);
+client.login(token);
 //# sourceMappingURL=index.js.map

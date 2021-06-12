@@ -1,9 +1,12 @@
 import Discord from "discord.js";
 import path from "path";
 import FS from "fs";
-import { prefix, token, channelID } from "../config.json";
+import { prefix, channelID } from "../config.json";
 import { BASE_DIR } from "../constants";
 const client = new Discord.Client();
+const dotenv = require("dotenv");
+dotenv.config();
+const token = process.env.BOT_TOKEN;
 
 const getCommands = (): string[] => {
   const cmds: string[] = [];
