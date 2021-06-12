@@ -1,1 +1,1 @@
-worker: node dist/src/index.js
+worker: cross-env NODE_ENV=PRODUCTION node dist/src/index.js
