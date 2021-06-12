@@ -51,6 +51,6 @@ module.exports = (msg: Discord.Message, args: string[]) => {
   } else if (args.join(" ").trim() === "mine") {
     listSuggestionsByID(msg, msg.author.id);
   } else {
-    msg.reply("not a command");
+    msg.reply("Not a command.");
   }
 };
