@@ -2,8 +2,15 @@ import Discord from "discord.js";
 import { db, timestamp } from "../utils/firebase";
 import { Suggestion, User } from "../bot-types";
 
-const addSuggestion = async (suggestion: Suggestion) => {
-  await db.collection("suggestions").add(suggestion);
+const addSuggestion = async (msg: Discord.Message, suggestion: Suggestion) => {
+  const docRef = db.collection("channels").doc(msg.channel.id);
+  const docData = await (await docRef.get()).data();
+  if (docData === undefined) {
+    await docRef.set({
+      id: msg.channel.id,
+    });
+  }
+  await docRef.collection("suggestions").add(suggestion);
 };
 
 module.exports = (msg: Discord.Message, args: string[]) => {
@@ -23,8 +30,7 @@ module.exports = (msg: Discord.Message, args: string[]) => {
       votes: [],
     };
 
-    addSuggestion(data);
-
+    addSuggestion(msg, data);
     msg.reply("Suggestion Added!");
   }
 };

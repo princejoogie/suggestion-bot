@@ -1,16 +1,9 @@
 import Discord from "discord.js";
-import { Suggestion } from "../bot-types";
-import { db } from "../utils/firebase";
+import { getSuggestions } from "../helpers";
 
-const getSuggestions = async (msg: Discord.Message) => {
+const listSuggestions = async (msg: Discord.Message) => {
   try {
-    const res = await db
-      .collection("suggestions")
-      .orderBy("timestamp", "desc")
-      .get();
-    const suggestions = res.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Suggestion)
-    );
+    const suggestions = await getSuggestions(msg);
 
     if (!suggestions.length) {
       let reply = "```\n";
@@ -34,21 +27,14 @@ const getSuggestions = async (msg: Discord.Message) => {
   }
 };
 
-const getSuggestionsByID = async (msg: Discord.Message, id: string) => {
+const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
   try {
-    const res = await db
-      .collection("suggestions")
-      .orderBy("timestamp", "desc")
-      .where("user.id", "==", id)
-      .get();
-    const suggestions = res.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Suggestion)
-    );
+    const suggestions = await getSuggestions(msg, id);
 
     let reply = "```\n";
     reply += `${msg.author.username}'s Suggestions:\n`;
     suggestions.map((e, i) => {
-      reply += `${i + 1}. ${e.suggestion}\n`;
+      reply += `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)\n`;
     });
     reply += "```";
 
@@ -61,9 +47,9 @@ const getSuggestionsByID = async (msg: Discord.Message, id: string) => {
 
 module.exports = (msg: Discord.Message, args: string[]) => {
   if (!args.length) {
-    getSuggestions(msg);
+    listSuggestions(msg);
   } else if (args.join(" ").trim() === "mine") {
-    getSuggestionsByID(msg, msg.author.id);
+    listSuggestionsByID(msg, msg.author.id);
   } else {
     msg.reply("not a command");
   }

@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import { getSuggestions } from "../helpers";
 import { Suggestion } from "../bot-types";
 import { db } from "../utils/firebase";
 
@@ -14,13 +15,7 @@ const alreadyVoted = (suggestion: Suggestion, id: string) => {
 
 const vote = async (msg: Discord.Message, num: number) => {
   try {
-    const res = await db
-      .collection("suggestions")
-      .orderBy("timestamp", "desc")
-      .get();
-    const suggestions = res.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Suggestion)
-    );
+    const suggestions = await getSuggestions(msg);
 
     if (!suggestions.length) {
       msg.reply("There are no suggestions to vote to.");
@@ -33,9 +28,14 @@ const vote = async (msg: Discord.Message, num: number) => {
       let votes: string[] = suggestions[num - 1].votes;
       votes.push(msg.author.id);
       try {
-        await db.collection("suggestions").doc(suggestionID).update({
-          votes,
-        });
+        await db
+          .collection("channels")
+          .doc(msg.channel.id)
+          .collection("suggestions")
+          .doc(suggestionID)
+          .update({
+            votes,
+          });
 
         let reply = "```\n";
         reply += `Vote added to (${suggestions[num - 1].suggestion})\n`;
