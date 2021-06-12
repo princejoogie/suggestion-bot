@@ -7,7 +7,7 @@ const client = new Discord.Client();
 const dotenv = require("dotenv");
 dotenv.config();
 const token = process.env.BOT_TOKEN;
-const extension = process.env.NODE_ENV === "DEVELOPMENT" ? ".ts" : ".js";
+const extension = process.env.NODE_ENV === "development" ? ".ts" : ".js";
 
 const getCommands = (): string[] => {
   const cmds: string[] = [];
