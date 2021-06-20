@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import path from "path";
 import FS from "fs";
-import { prefix, channelIDs } from "../config.json";
+import { prefix } from "../config.json";
 import { BASE_DIR } from "../constants";
 const client = new Discord.Client();
 const dotenv = require("dotenv");
@@ -28,7 +28,7 @@ client.once("ready", () => {
 });
 
 client.on("message", (msg) => {
-  if (channelIDs.includes(msg.channel.id) && msg.content.startsWith(prefix)) {
+  if (msg.content.startsWith(prefix)) {
     let args = msg.content.split(" ");
     const cmd = args[0].substring(1, args[0].length);
 
