@@ -28,20 +28,24 @@ client.once("ready", () => {
 });
 
 client.on("message", (msg) => {
-  if (msg.content.startsWith(prefix)) {
-    let args = msg.content.split(" ");
-    const cmd = args[0].substring(1, args[0].length);
+  try {
+    if (msg.content.startsWith(prefix)) {
+      let args = msg.content.split(" ");
+      const cmd = args[0].substring(1, args[0].length);
 
-    if (commands.includes(cmd)) {
-      args.splice(0, 1);
-      const useCommand = require(path.join(
-        BASE_DIR,
-        "src",
-        "commands",
-        `${cmd}${extension}`
-      ));
-      useCommand(msg, args);
+      if (commands.includes(cmd)) {
+        args.splice(0, 1);
+        const useCommand = require(path.join(
+          BASE_DIR,
+          "src",
+          "commands",
+          `${cmd}${extension}`
+        ));
+        useCommand(msg, args);
+      }
     }
+  } catch (err) {
+    console.log("ERROR: ", err);
   }
 });
 
