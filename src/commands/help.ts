@@ -1,15 +1,40 @@
-import Discord from "discord.js";
+import Discord, { MessageEmbed } from "discord.js";
+
+const helps = [
+  {
+    name: "`suggest <text>`",
+    description: "Adds your suggestion in database",
+  },
+  {
+    name: "`list`",
+    description: "List all suggestions",
+  },
+  {
+    name: "`list mine`",
+    description: "List all your suggestions",
+  },
+
+  {
+    name: "`delete <number>`",
+    description: "Delete your suggestion (use after `list`)",
+  },
+  {
+    name: "`vote <number>`",
+    description: "Vote a suggestion (use after `list`)",
+  },
+  {
+    name: "`unvote <number>`",
+    description: "Unvote your suggestion (use after `list`)",
+  },
+];
 
 module.exports = (msg: Discord.Message) => {
-  let reply = "```\n";
-  reply += ">suggest <your suggestion here>\n";
-  reply += "  - Adds your suggestion in database\n";
-  reply += ">list\n";
-  reply += "  - Lists all CURRENT suggestions\n";
-  reply += ">list mine\n";
-  reply += "  - Lists all YOUR suggestions\n";
-  reply += ">vote <number>\n";
-  reply += "  - Vote a suggestion (use after >list)\n";
-  reply += "```";
-  msg.channel.send(reply);
+  const embed = new MessageEmbed()
+    .setColor("#0099ff")
+    .setTitle("Help")
+    .setDescription("prefix: `>`");
+  helps.map((e, i) => {
+    embed.addField(`${i + 1}. ${e.name}`, e.description);
+  });
+  msg.channel.send(embed);
 };

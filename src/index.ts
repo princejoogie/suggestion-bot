@@ -10,14 +10,14 @@ const token = process.env.BOT_TOKEN;
 const extension = process.env.NODE_ENV === "development" ? ".ts" : ".js";
 
 const getCommands = (): string[] => {
-  const cmds: string[] = [];
+  const commands: string[] = [];
   const dir = path.join(BASE_DIR, "./src", "./commands");
   FS.readdir(dir, (err, files) => {
     if (!err) {
-      files.forEach((file) => cmds.push(file.replace(extension, "")));
+      files.forEach((file) => commands.push(file.replace(extension, "")));
     }
   });
-  return cmds;
+  return commands;
 };
 
 const commands: string[] = getCommands();

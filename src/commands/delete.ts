@@ -9,34 +9,35 @@ const isNumeric = (str: any) => {
   return !isNaN(str) && !isNaN(parseFloat(str));
 };
 
-const alreadyVoted = (suggestion: Suggestion, id: string) => {
-  return suggestion.votes.includes(id);
+const isAuthorOrAdmin = (suggestion: Suggestion, msg: Discord.Message) => {
+  return (
+    suggestion.user.id === msg.author.id ||
+    msg.member?.hasPermission("ADMINISTRATOR") ||
+    msg.member?.hasPermission("BAN_MEMBERS")
+  );
 };
 
-const vote = async (msg: Discord.Message, num: number) => {
+const deleteVote = async (msg: Discord.Message, num: number) => {
   try {
     const suggestions = await getSuggestions(msg);
 
     if (!suggestions.length) {
-      msg.reply("There are no suggestions to vote to.");
+      msg.reply("There are no suggestions to delete.");
     } else if (num > suggestions.length) {
-      msg.reply("Can't vote on that.");
-    } else if (alreadyVoted(suggestions[num - 1], msg.author.id)) {
-      msg.reply("You already voted on that.");
+      msg.reply("Can't delete that.");
+    } else if (!isAuthorOrAdmin(suggestions[num - 1], msg)) {
+      msg.reply(
+        "You can only delete your own votes. Or ask an admin to delete it."
+      );
     } else {
       let suggestionID = suggestions[num - 1].id;
-      let votes: string[] = suggestions[num - 1].votes;
-      votes.push(msg.author.id);
       try {
         await db
           .collection("channels")
           .doc(msg.channel.id)
           .collection("suggestions")
           .doc(suggestionID)
-          .update({
-            votes,
-          });
-
+          .delete();
         msg.react("👍");
       } catch (err) {
         console.log(err);
@@ -52,7 +53,7 @@ const vote = async (msg: Discord.Message, num: number) => {
 module.exports = (msg: Discord.Message, args: string[]) => {
   const number = args.join("").trim();
   if (isNumeric(number)) {
-    vote(msg, parseInt(number));
+    deleteVote(msg, parseInt(number));
   } else {
     msg.reply("Invalid argument.");
   }
