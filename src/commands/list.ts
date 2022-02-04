@@ -1,26 +1,25 @@
-import Discord from "discord.js";
+import Discord, { MessageEmbed } from "discord.js";
 import { getSuggestions } from "../helpers";
 
 const listSuggestions = async (msg: Discord.Message) => {
   try {
     const suggestions = await getSuggestions(msg);
+    const embed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setTitle("All suggestions");
 
-    if (!suggestions.length) {
-      let reply = "```\n";
-      reply += "No Suggestions yet.\n";
-      reply += "```";
-
-      msg.channel.send(reply);
-    } else {
-      let reply = "```\n";
-      reply += "Current Suggestions:\n";
+    if (suggestions.length > 0) {
       suggestions.map((e, i) => {
-        reply += `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)\n`;
+        embed.addField(
+          `${i + 1}. (${e.votes.length} vote/s)`,
+          `${e.suggestion}`
+        );
       });
-      reply += "```";
-
-      msg.channel.send(reply);
+    } else {
+      embed.addField("No Suggestions yet.", "use `>suggest` to add one");
     }
+
+    msg.channel.send(embed);
   } catch (err) {
     console.log(err);
     msg.channel.send("`Something went wrong :(`");
@@ -30,15 +29,21 @@ const listSuggestions = async (msg: Discord.Message) => {
 const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
   try {
     const suggestions = await getSuggestions(msg, id);
+    const embed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setTitle("Suggestions")
+      .setDescription(`suggestions by <@${id}>`)
+      .setThumbnail(msg.author.avatarURL() ?? "");
 
-    let reply = "```\n";
-    reply += `${msg.author.username}'s Suggestions:\n`;
-    suggestions.map((e, i) => {
-      reply += `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)\n`;
-    });
-    reply += "```";
+    if (suggestions.length > 0) {
+      suggestions.map((e) => {
+        embed.addField(`(${e.votes.length} vote/s)`, `${e.suggestion}`);
+      });
+    } else {
+      embed.addField("No Suggestions yet.", "use `>suggest` to add one");
+    }
 
-    msg.channel.send(reply);
+    msg.channel.send(embed);
   } catch (err) {
     console.log(err);
     msg.channel.send("`Something went wrong :(`");

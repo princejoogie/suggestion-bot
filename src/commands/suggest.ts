@@ -13,7 +13,7 @@ const addSuggestion = async (msg: Discord.Message, suggestion: Suggestion) => {
   await docRef.collection("suggestions").add(suggestion);
 };
 
-module.exports = (msg: Discord.Message, args: string[]) => {
+module.exports = async (msg: Discord.Message, args: string[]) => {
   const suggestion = args.join(" ").trim();
   if (!suggestion) {
     msg.reply("Invalid argument.");
@@ -30,7 +30,7 @@ module.exports = (msg: Discord.Message, args: string[]) => {
       votes: [],
     };
 
-    addSuggestion(msg, data);
-    msg.reply("Suggestion Added!");
+    await addSuggestion(msg, data);
+    msg.react("👍");
   }
 };
