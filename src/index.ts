@@ -3,9 +3,11 @@ import path from "path";
 import FS from "fs";
 import { prefix } from "../config.json";
 import { BASE_DIR } from "../constants";
-const client = new Discord.Client();
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
+
 dotenv.config();
+
+const client = new Discord.Client();
 const token = process.env.BOT_TOKEN;
 const extension = process.env.NODE_ENV === "development" ? ".ts" : ".js";
 
