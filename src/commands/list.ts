@@ -1,7 +1,5 @@
 import Discord, { MessageEmbed } from "discord.js";
 import { getSuggestions } from "../helpers";
-import { Suggestion } from "../bot-types";
-import { db } from "../utils/firebase";
 
 const listSuggestions = async (msg: Discord.Message) => {
   try {
@@ -30,23 +28,14 @@ const listSuggestions = async (msg: Discord.Message) => {
 
 const listResolved = async (msg: Discord.Message) => {
   try {
-    const resolvedSuggestions = await db
-      .collection("channels")
-      .doc(msg.channel.id)
-      .collection("resolved")
-      .orderBy("timestamp", "desc")
-      .get();
-
-    const resolved = resolvedSuggestions.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Suggestion)
-    );
+    const resolvedSuggestions = await getSuggestions(msg, { resolved: true });
 
     const embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Resolved Suggestions");
 
-    if (resolved.length > 0) {
-      resolved.map((e, i) => {
+    if (resolvedSuggestions.length > 0) {
+      resolvedSuggestions.map((e, i) => {
         embed.addField(
           `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)`,
           `Suggested by: ${e.user.name}`
@@ -67,11 +56,11 @@ const listResolved = async (msg: Discord.Message) => {
 
 const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
   try {
-    const suggestions = await getSuggestions(msg, id);
+    const suggestions = await getSuggestions(msg, { userId: id });
     const embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Suggestions")
-      .setDescription(`suggestions by <@${id}>`)
+      .setDescription(`by <@${id}>`)
       .setThumbnail(msg.author.avatarURL() ?? "");
 
     if (suggestions.length > 0) {
