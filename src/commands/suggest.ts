@@ -4,7 +4,7 @@ import { Suggestion, User } from "../bot-types";
 
 const addSuggestion = async (msg: Discord.Message, suggestion: Suggestion) => {
   const docRef = db.collection("channels").doc(msg.channel.id);
-  const docData = await (await docRef.get()).data();
+  const docData = (await docRef.get()).data();
   if (docData === undefined) {
     await docRef.set({
       id: msg.channel.id,
