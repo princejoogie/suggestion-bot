@@ -38,7 +38,7 @@ const listResolved = async (msg: Discord.Message) => {
       resolvedSuggestions.map((e, i) => {
         embed.addField(
           `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)`,
-          `Suggested by: ${e.user.name}`
+          `Suggested by: \`${e.user.name}\``
         );
       });
     } else {
@@ -68,7 +68,7 @@ const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
       embed.addField(
         "Open",
         suggestions
-          .map((e) => `${e.suggestion} (${e.votes.length} vote/s)`)
+          .map((e) => `${e.suggestion} \`(${e.votes.length} vote/s)\``)
           .join("\n")
       );
     } else {
@@ -79,7 +79,7 @@ const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
       embed.addField(
         "Resolved",
         resolvedSuggestions
-          .map((e) => `${e.suggestion} (${e.votes.length} vote/s)`)
+          .map((e) => `${e.suggestion} \`(${e.votes.length} vote/s)\``)
           .join("\n")
       );
     }
