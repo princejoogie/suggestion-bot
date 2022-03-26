@@ -9,7 +9,7 @@ const deleteVote = async (msg: Discord.Message, num: number) => {
     if (!suggestions.length) {
       msg.reply("There are no suggestions to delete.");
     } else if (num > suggestions.length) {
-      msg.reply("Can't delete that.");
+      msg.reply("Suggestion does not exist.");
     } else if (!isAuthorOrAdmin(suggestions[num - 1], msg)) {
       msg.reply(
         "You can only delete your own votes. Or ask an admin to delete it."

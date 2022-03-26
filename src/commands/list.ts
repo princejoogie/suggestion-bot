@@ -32,7 +32,7 @@ const listResolved = async (msg: Discord.Message) => {
 
     const embed = new MessageEmbed()
       .setColor("#0099ff")
-      .setTitle("Resolved Suggestions");
+      .setTitle("Resolved suggestions");
 
     if (resolvedSuggestions.length > 0) {
       resolvedSuggestions.map((e, i) => {
@@ -42,10 +42,7 @@ const listResolved = async (msg: Discord.Message) => {
         );
       });
     } else {
-      embed.addField(
-        "No Resolved Suggestions yet.",
-        "use `>resolve` to add one"
-      );
+      embed.addField("No Suggestions yet.", "use `>resolve` to add one");
     }
 
     msg.channel.send(embed);
@@ -57,6 +54,10 @@ const listResolved = async (msg: Discord.Message) => {
 const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
   try {
     const suggestions = await getSuggestions(msg, { userId: id });
+    const resolvedSuggestions = await getSuggestions(msg, {
+      userId: id,
+      resolved: true,
+    });
     const embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Suggestions")
@@ -64,11 +65,23 @@ const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
       .setThumbnail(msg.author.avatarURL() ?? "");
 
     if (suggestions.length > 0) {
-      suggestions.map((e) => {
-        embed.addField(`(${e.votes.length} vote/s)`, `${e.suggestion}`);
-      });
+      embed.addField(
+        "Open",
+        suggestions
+          .map((e) => `${e.suggestion} (${e.votes.length} vote/s)`)
+          .join("\n")
+      );
     } else {
-      embed.addField("No Suggestions yet.", "use `>suggest` to add one");
+      embed.addField("No Open Suggestions", "use `>suggest` to add one");
+    }
+
+    if (resolvedSuggestions.length > 0) {
+      embed.addField(
+        "Resolved",
+        resolvedSuggestions
+          .map((e) => `${e.suggestion} (${e.votes.length} vote/s)`)
+          .join("\n")
+      );
     }
 
     msg.channel.send(embed);
