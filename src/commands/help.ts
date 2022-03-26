@@ -10,10 +10,17 @@ const helps = [
     description: "List all suggestions",
   },
   {
+    name: "`list resolved`",
+    description: "List all resolved suggestions",
+  },
+  {
     name: "`list mine`",
     description: "List all your suggestions",
   },
-
+  {
+    name: "`resolve <number>`",
+    description: "Resolve a suggestion (use after `list`)",
+  },
   {
     name: "`delete <number>`",
     description: "Delete your suggestion (use after `list`)",
