@@ -1,21 +1,6 @@
 import Discord from "discord.js";
-import { getSuggestions } from "../helpers";
-import { Suggestion } from "../bot-types";
 import { db } from "../utils/firebase";
-
-const isNumeric = (str: any) => {
-  if (typeof str != "string") return false;
-  // @ts-ignore
-  return !isNaN(str) && !isNaN(parseFloat(str));
-};
-
-const isAuthorOrAdmin = (suggestion: Suggestion, msg: Discord.Message) => {
-  return (
-    suggestion.user.id === msg.author.id ||
-    msg.member?.hasPermission("ADMINISTRATOR") ||
-    msg.member?.hasPermission("BAN_MEMBERS")
-  );
-};
+import { getSuggestions, isAuthorOrAdmin, isNumeric } from "../helpers";
 
 const deleteVote = async (msg: Discord.Message, num: number) => {
   try {

@@ -32,3 +32,20 @@ export const getSuggestions = async (msg: Discord.Message, id?: string) => {
     return [];
   }
 };
+
+export const isNumeric = (str: any) => {
+  if (typeof str != "string") return false;
+  // @ts-ignore
+  return !isNaN(str) && !isNaN(parseFloat(str));
+};
+
+export const isAuthorOrAdmin = (
+  suggestion: Suggestion,
+  msg: Discord.Message
+) => {
+  return (
+    suggestion.user.id === msg.author.id ||
+    msg.member?.hasPermission("ADMINISTRATOR") ||
+    msg.member?.hasPermission("BAN_MEMBERS")
+  );
+};
