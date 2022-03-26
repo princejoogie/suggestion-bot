@@ -26,21 +26,62 @@ const listSuggestions = async (msg: Discord.Message) => {
   }
 };
 
+const listResolved = async (msg: Discord.Message) => {
+  try {
+    const resolvedSuggestions = await getSuggestions(msg, { resolved: true });
+
+    const embed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setTitle("Resolved suggestions");
+
+    if (resolvedSuggestions.length > 0) {
+      resolvedSuggestions.map((e, i) => {
+        embed.addField(
+          `${i + 1}. ${e.suggestion} (${e.votes.length} vote/s)`,
+          `Suggested by: \`${e.user.name}\``
+        );
+      });
+    } else {
+      embed.addField("No Suggestions yet.", "use `>resolve` to add one");
+    }
+
+    msg.channel.send(embed);
+  } catch (err) {
+    msg.channel.send("`Something went wrong :(`");
+  }
+};
+
 const listSuggestionsByID = async (msg: Discord.Message, id: string) => {
   try {
-    const suggestions = await getSuggestions(msg, id);
+    const suggestions = await getSuggestions(msg, { userId: id });
+    const resolvedSuggestions = await getSuggestions(msg, {
+      userId: id,
+      resolved: true,
+    });
     const embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Suggestions")
-      .setDescription(`suggestions by <@${id}>`)
+      .setDescription(`by <@${id}>`)
       .setThumbnail(msg.author.avatarURL() ?? "");
 
     if (suggestions.length > 0) {
-      suggestions.map((e) => {
-        embed.addField(`(${e.votes.length} vote/s)`, `${e.suggestion}`);
-      });
+      embed.addField(
+        "Open",
+        suggestions
+          .map((e) => `${e.suggestion} \`(${e.votes.length} vote/s)\``)
+          .join("\n")
+      );
     } else {
-      embed.addField("No Suggestions yet.", "use `>suggest` to add one");
+      embed.addField("No Open Suggestions", "use `>suggest` to add one");
+    }
+
+    if (resolvedSuggestions.length > 0) {
+      embed.addField(
+        "Resolved",
+        resolvedSuggestions
+          .map((e) => `${e.suggestion} \`(${e.votes.length} vote/s)\``)
+          .join("\n")
+      );
     }
 
     msg.channel.send(embed);
@@ -55,6 +96,8 @@ module.exports = (msg: Discord.Message, args: string[]) => {
     listSuggestions(msg);
   } else if (args.join(" ").trim() === "mine") {
     listSuggestionsByID(msg, msg.author.id);
+  } else if (args.join(" ").trim() === "resolved") {
+    listResolved(msg);
   } else {
     msg.reply("Not a command.");
   }
